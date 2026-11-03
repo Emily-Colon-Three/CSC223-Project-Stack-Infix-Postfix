@@ -38,3 +38,30 @@ class Stack:
 
     def size(self) -> int:
         return self._size
+
+import unittest
+
+# Tests that a newly created stack is empty. Also that is_empty() works as intended.
+class InitializeStack(unittest.TestCase):
+    def test_empty(self):
+        stack = Stack()
+        self.assertEqual(stack.is_empty(), True)
+        self.assertEqual(stack.size(), 0)
+
+# Tests that push(item) causes correct changes. Tests push, pop, and peek.
+class UpdateStack(unittest.TestCase):
+    def setUp(self): # Creates stack and pushes a 1, then a 2. 2 is now top item.
+        self.stack = Stack()
+        self.stack.push(1)
+        self.stack.push(2)
+
+    def test_size(self): # Tests that the size has been updated accordingly from empty.
+        self.assertFalse(self.stack.is_empty())
+        self.assertEqual(self.stack.size(), 2)
+
+    def test_pop_and_peek(self): # Tests that peek() only returns top, and that pop() successfully removes and returns it.
+        self.assertEqual(self.stack.peek(), 2)
+        self.assertEqual(self.stack.pop(), 2) # 2 removed from stack, only 1 remains.
+
+        self.assertEqual(self.stack.peek(), 1)
+        self.assertEqual(self.stack.size(), 1)
