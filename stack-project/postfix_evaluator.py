@@ -39,3 +39,53 @@ class PostfixEvaluator:
         if stack.size() > 1:
             raise ValueError("Too many operands.")
         return stack.pop()
+
+# Testing
+import unittest
+
+class ValidPostfix(unittest.TestCase):
+    def setUp(self):
+        self.evaluator = PostfixEvaluator()
+
+        self.case1 = "5 3 +"
+        self.case2 = "8 2 - 3 +"
+        self.case3 = "5 3 8 * +"
+        self.case4 = "6 2 / 3 +"
+        self.case5 = "5 3 8 * + 2 /"
+
+    def test_cases(self):
+        self.assertEqual(self.evaluator.evaluate_postfix(self.case1), 8)
+        self.assertEqual(self.evaluator.evaluate_postfix(self.case2), 9)
+        self.assertEqual(self.evaluator.evaluate_postfix(self.case3), 29)
+        self.assertEqual(self.evaluator.evaluate_postfix(self.case4), 6.0)
+        self.assertEqual(self.evaluator.evaluate_postfix(self.case5), 14.5)
+
+class InvalidPostfix(unittest.TestCase):
+    def setUp(self):
+        self.evaluator = PostfixEvaluator()
+
+    def test_insufficient_operands(self):
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("5 +")
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("25 23 + -")
+
+    def test_too_many_operands(self):
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("5 3 6 +")
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("23 28 + 6 8 /")
+
+    def test_divide_by_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            self.evaluator.evaluate_postfix("5 0 /")
+
+    def test_invalid_tokens(self):
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("1 2 %")
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("5 3 * ;")
+
+    def test_malformed(self):
+        with self.assertRaises(ValueError):
+            self.evaluator.evaluate_postfix("9 + 10")
